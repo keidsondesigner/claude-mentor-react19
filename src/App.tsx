@@ -3,7 +3,9 @@ import Greeting from './components/Greeting'
 import MeuButton from './components/MeuButton'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [count, setCount] = useState(0);
+
+  const [names, setNames] = useState(["Keidson", "karol", "Ana"]);
 
   function handleClick() {
     alert('Clicado via props!')
@@ -36,6 +38,17 @@ function App() {
         Atualizar contador
       </MeuButton>
       <p>Contador: {count}</p>
+
+      <br />
+      <br />
+
+      <ul>
+        {names.map((name, index) => (
+          <li key={index}>
+            {name}
+          </li>
+        ))}
+      </ul>
 
     </main>
   )
