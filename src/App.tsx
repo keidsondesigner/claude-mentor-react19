@@ -7,6 +7,9 @@ function App() {
 
   const [names, setNames] = useState(["Keidson", "karol", "Ana"]);
 
+  // 6 aula - Filtrando dados da lista
+  const [search, setSearch] = useState("");
+
   function handleClick() {
     alert('Clicado via props!')
   }
@@ -42,12 +45,21 @@ function App() {
       <br />
       <br />
 
+      <input
+        type="text"
+        placeholder="Digite um nome"
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+      />
+
       <ul>
-        {names.map((name, index) => (
-          <li key={index}>
-            {name}
-          </li>
-        ))}
+        {names
+          .filter((name) => name.toLowerCase().includes(search.toLowerCase()))
+          .map((name, index) => (
+            <li key={index}>
+              {name}
+            </li>
+          ))}
       </ul>
 
     </main>
