@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Greeting from './components/Greeting'
 import MeuButton from './components/MeuButton'
 
@@ -13,6 +13,11 @@ function App() {
   function handleClick() {
     alert('Clicado via props!')
   }
+
+  // 7 aula - Efeitos colaterais com useEffect()
+  useEffect(() => {
+    console.log(document.title = `Você clicou ${count} vezes`);
+  }, [count]);
 
 
   return (
@@ -40,7 +45,19 @@ function App() {
       >
         Atualizar contador
       </MeuButton>
+
+      <br />
+      <br />
       <p>Contador: {count}</p>
+      <br />
+
+      <MeuButton
+        variant="danger"
+        title="Limpar contador"
+        onClick={() => setCount(0)}
+      >
+        Limpar contador
+      </MeuButton>
 
       <br />
       <br />
