@@ -2,12 +2,23 @@ import { useEffect, useState } from 'react'
 import Greeting from './components/Greeting'
 import MeuButton from './components/MeuButton'
 
+interface User {
+  id: number
+  name: string
+}
+
 function App() {
   const [count, setCount] = useState(0);
 
   const [names, setNames] = useState(["Keidson", "karol", "Ana"]);
 
   const [car, setCar] = useState("");
+
+  const [usersApi, setUsersApi] = useState<User[]>([]);
+
+  const [loadingUsersApi, setLoadingUsersApi] = useState(true);
+
+  const [errorUsersApi, setErrorUsersApi] = useState<string | null>(null);
 
   // 6 aula - Filtrando dados da lista
   const [search, setSearch] = useState("");
@@ -53,6 +64,39 @@ function App() {
   useEffect(() => {
     console.log("Contador ou Carro foi atualizado");
   }, [count, car]);
+
+  // 9 aula - Chamada a API e salvando dados no estado, lidando com estados de carregamento e erro
+
+  // Ao fazer fetch, precisamos lidar com 3 situações:
+  // 1. Loading - os dados ainda não chegaram
+  // 2. Sucesso - os dados chegaram
+  // 3. Erro - algo deu errado
+
+  // Use um estado para cada situação: loading, error e data
+  // Use um useEffect para buscar dados
+  // Use um cleanup para cancelar fetch
+  // Use um try/catch para lidar com erros
+  // Use um finally para lidar com loading
+
+  useEffect(() => {
+    //fazer fetch para buscar dados em https://jsonplaceholder.typicode.com/users
+    const controller = new AbortController();
+    const signal = controller.signal;
+
+    fetch('https://jsonplaceholder.typicode.com/users', { signal })
+      .then(response => response.json())
+      .then(data => setUsersApi(data)) // ← salva no estado
+      .catch(error => {
+        if (error.name === 'AbortError') return // ← cancela silenciosamente
+        setErrorUsersApi('Erro ao buscar usuários')     // ← só trata erros reais
+      })
+      .finally(() => console.log('Fim da requisição'))
+
+    return () => {
+      console.log('🔴 desmontado (cleanup) - cancelando fetch')
+      controller.abort()
+    }
+  }, [])
 
 
   return (
@@ -123,6 +167,18 @@ function App() {
               {name}
             </li>
           ))}
+      </ul>
+
+      <br />
+      <br />
+
+      {/* renderizar os dados que vem do fetch */}
+      <ul>
+        {usersApi.map((user) => (
+          <li key={user.id}>
+            {user.name}
+          </li>
+        ))}
       </ul>
 
     </main>
