@@ -90,7 +90,7 @@ function App() {
         if (error.name === 'AbortError') return // ← cancela silenciosamente
         setErrorUsersApi('Erro ao buscar usuários')     // ← só trata erros reais
       })
-      .finally(() => console.log('Fim da requisição'))
+      .finally(() => setLoadingUsersApi(false)) // ← Após o fetch, sempre vai ser false
 
     return () => {
       console.log('🔴 desmontado (cleanup) - cancelando fetch')
@@ -172,6 +172,13 @@ function App() {
       <br />
       <br />
 
+      {/* 1. Loading - mostra enquanto carrega */}
+      {loadingUsersApi && <p>Carregando usuários...</p>}
+
+      {/* 2. Error - mostra se der erro */}
+      {errorUsersApi && <p style={{ color: 'red' }}>{errorUsersApi}</p>}
+
+      {/* 3. Data - mostra os dados quando chegar */}
       {/* renderizar os dados que vem do fetch */}
       <ul>
         {usersApi.map((user) => (
