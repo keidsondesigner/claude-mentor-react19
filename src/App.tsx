@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Greeting from './components/Greeting'
 import MeuButton from './components/MeuButton'
 
@@ -23,8 +23,36 @@ function App() {
   // 6 aula - Filtrando dados da lista
   const [search, setSearch] = useState("");
 
+
+  // 18 aula - Criando formulários com useRef
+  const formRef = useRef<HTMLFormElement>(null);
+
   function handleClick() {
-    alert('Clicado via props!')
+    alert('Clicado via props!');
+  }
+
+  // 18 aula - Criando formulários com useRef
+  function handleFormSubmit(event: React.SubmitEvent) {
+    // Previne o comportamento padrão do formulário(que é recarregar a página)
+    event.preventDefault();
+
+    // Se o formRef.current for null, não faz nada
+    if (!formRef.current) return;
+
+    // 1. Acessar o elemento do formulário
+    const form = formRef.current;
+
+    // 2. Criar um FormData a partir do formulário
+    const formData = new FormData(form);
+
+    // 3. Acessar os dados do formulário
+    const payload = {
+      name: formData.get('name'),
+      email: formData.get('email')
+    }
+
+    // 4. Fazer algo com os dados
+    console.log("Formulario", payload);
   }
 
   // 7 aula - Efeitos colaterais com useEffect()
@@ -187,6 +215,23 @@ function App() {
           </li>
         ))}
       </ul>
+
+      <br />
+      <br />
+
+      {/* 18 aula - Formulários com useRef */}
+      <h2>Formulário com useRef</h2>
+      <form ref={formRef} onSubmit={handleFormSubmit}>
+        <div>
+          <label htmlFor="name">Nome</label>
+          <input type="text" id="name" name="name" />
+        </div>
+        <div>
+          <label htmlFor="email">Email</label>
+          <input type="email" id="email" name="email" />
+        </div>
+        <button type="submit">Enviar</button>
+      </form>
 
     </main>
   )
